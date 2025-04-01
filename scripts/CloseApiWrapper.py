@@ -144,6 +144,16 @@ class CloseApiWrapper(Client):
         mapping = {field["name"]: f"custom.{field['id']}" for field in schema["fields"]}
         return mapping
 
+    def get_custom_object_type_id(self, name: str) -> str | None:
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("Invalid name. Name must be a non-empty string.")
+
+        custom_object_types = self.get("custom_object_type")["data"]
+        return next(
+            (cot["id"] for cot in custom_object_types if cot["name"] == name),
+            None,
+        )
+
     def get_all(self, url, params=None):
         if params is None:
             params = {}
@@ -201,7 +211,7 @@ class CloseApiWrapper(Client):
             resp = self.post("data/search", data=payload)
             data.extend(resp["data"])
             payload["cursor"] = resp["cursor"]
-            has_more = bool(resp["cursor"])
+            has_more = limit == 200 and bool(resp["cursor"])
 
         return data
 
