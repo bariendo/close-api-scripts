@@ -1,12 +1,9 @@
 import argparse
 import sys
-from typing import cast
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
-from utils.get_lead_id import get_lead_and_activity_id, get_lead_id
-from utils.prompt_user_for_choice import prompt_user_for_choice
-
+from utils.get_lead_id import get_lead_and_activity_id
 
 parser = argparse.ArgumentParser(
     description="Replace Lost opportunity with Lead Qualification form"

@@ -67,10 +67,10 @@ async def update_sequence(
     updated_schedule = update_schedule(sequence.get("schedule"), weekday, turn_on)
     if updated_schedule:
         return await client.put_async(
-            f"sequence/{sequence["id"]}", {"schedule": updated_schedule}
+            f"sequence/{sequence['id']}", {"schedule": updated_schedule}
         )
     else:
-        print(f"Not updated: {sequence["name"]}")
+        print(f"Not updated: {sequence['name']}")
 
 
 async def update_sequence_schedules(

@@ -1,15 +1,13 @@
 import argparse
 import os
 import sys
-from datetime import datetime
-from dateutil import tz
+from datetime import datetime, timezone
+
 from CloseApiWrapper import CloseApiWrapper
 from utils.csv import read_csv_to_dict
 from utils.formatters import get_full_name
 from utils.get_api_key import get_api_key
 from utils.get_lead_id import get_lead_id
-from utils.prompt_user_for_choice import prompt_user_for_choice
-
 
 arg_parser = argparse.ArgumentParser(
     description="Enroll Lead in one of the Follow Up Workflows"
@@ -34,7 +32,7 @@ if not os.path.isfile(args.csv_file):
 
 records = read_csv_to_dict(args.csv_file)
 if not records:
-    print(f"No records found in the CSV file")
+    print("No records found in the CSV file")
     sys.exit(1)
 
 close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
@@ -43,7 +41,7 @@ close = CloseApiWrapper(close_api_key)
 
 def convert_answerconnect_datetime_to_utc(datetime_str: str) -> str:
     local_time = datetime.strptime(datetime_str, "%m/%d/%Y %I:%M %p %Z")
-    utc_time = local_time.astimezone(tz.tzutc()).isoformat()
+    utc_time = local_time.astimezone(timezone.utc).isoformat()
     return utc_time
 
 

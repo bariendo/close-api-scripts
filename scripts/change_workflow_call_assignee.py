@@ -3,11 +3,10 @@ import asyncio
 import json
 import logging
 import sys
+
 from CloseApiWrapper import CloseApiWrapper
 from utils.formatters import get_full_name
-
 from utils.get_api_key import get_api_key
-
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"

@@ -1,14 +1,13 @@
 import argparse
-from datetime import datetime
 import json
 import logging
 import os
 import sys
+from datetime import datetime
+
 from CloseApiWrapper import CloseApiWrapper
 from utils.csv import read_csv
-
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to Close"

@@ -6,7 +6,8 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
-from closeio_api import APIError, Client as CloseIO_API
+from closeio_api import APIError
+from closeio_api import Client as CloseIO_API
 from gevent.pool import Pool
 from utils.get_api_key import get_api_key
 

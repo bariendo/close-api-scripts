@@ -1,11 +1,9 @@
 import argparse
 import asyncio
 import json
-import sys
+
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Unenroll & re-enroll untouched Contacts in Workflows"
@@ -135,7 +133,7 @@ async def main():
 
     contact_ids = get_untouched_contact_ids(workflow_ids)
     if not contact_ids:
-        print(f"No untouched contacts enrolled in the specified Workflows found.")
+        print("No untouched contacts enrolled in the specified Workflows found.")
         return
 
     subscriptions = get_active_subscriptions(workflow_ids, contact_ids)

@@ -2,11 +2,11 @@ import argparse
 import asyncio
 import json
 import logging
+
 from CloseApiWrapper import CloseApiWrapper
-from ZendeskApiWrapper import ZendeskApiWrapper
 from utils.formatters import format_phone_number, get_full_name
 from utils.get_api_key import get_api_key
-
+from ZendeskApiWrapper import ZendeskApiWrapper
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"

@@ -2,10 +2,9 @@ import argparse
 import json
 import sys
 from typing import Any, List, cast
+
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Assign Leads to Patient Navigators based on Deal Owners, Task Assignees, and Note Creators"

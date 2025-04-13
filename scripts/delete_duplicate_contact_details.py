@@ -1,21 +1,17 @@
 import argparse
 import json
+import sys
 
 # import math
 from operator import itemgetter
-import sys
 
 import gevent.monkey
 from gevent.pool import Pool
 
-from utils.csv import write_csv
-
 gevent.monkey.patch_all()
 
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 parser = argparse.ArgumentParser(
     description="Find duplicate contact details on a contact in your Close org"

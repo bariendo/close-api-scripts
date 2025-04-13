@@ -1,16 +1,15 @@
 import argparse
 import asyncio
 import csv
-from collections import defaultdict, namedtuple
-from datetime import datetime
 import json
 import logging
 import os
 import sys
+from collections import defaultdict, namedtuple
+from datetime import datetime
+
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to Close"

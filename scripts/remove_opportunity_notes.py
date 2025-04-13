@@ -3,9 +3,7 @@ import json
 import sys
 
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Remove Opportunity notes matching Lead names."

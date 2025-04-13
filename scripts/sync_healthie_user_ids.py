@@ -1,10 +1,10 @@
 import argparse
 import sys
+
 from CloseApiWrapper import CloseApiWrapper
-from ZendeskApiWrapper import ZendeskApiWrapper
 from utils.csv import write_csv
 from utils.get_api_key import get_api_key
-
+from ZendeskApiWrapper import ZendeskApiWrapper
 
 arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"

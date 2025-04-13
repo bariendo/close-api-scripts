@@ -1,10 +1,9 @@
 import argparse
 import json
 import sys
+
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 parser = argparse.ArgumentParser(description="Delete leads")
 parser.add_argument(
@@ -89,6 +88,6 @@ total_cnt = len(lead_ids)
 for idx, id in enumerate(lead_ids):
     api.delete(f"lead/{id}")
     if args.verbose:
-        print(f"Deleted {(idx+1)}/{total_cnt}\t{id}")
+        print(f"Deleted {(idx + 1)}/{total_cnt}\t{id}")
 
 print(f"Deleted {total_cnt} leads.")

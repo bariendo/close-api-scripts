@@ -12,11 +12,9 @@ import time
 import closeio_api
 import unidecode
 from closeio_api import Client as CloseIO_API
-
 from progressbar import ProgressBar
 from progressbar.widgets import ETA, Bar, FileTransferSpeed, Percentage
 from requests.exceptions import ConnectionError
-
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Import leads from CSV file")
@@ -315,7 +313,7 @@ for key, val in unique_leads.items():
             warning('An error occurred while saving "%s"' % key)
             warning(err)
             retries = 0
-        except ConnectionError as e:
+        except ConnectionError:
             warning("Connection error occurred, retrying... (%d/5)" % retries)
             if retries == 0:
                 raise

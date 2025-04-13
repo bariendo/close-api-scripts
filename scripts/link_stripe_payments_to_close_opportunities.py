@@ -1,13 +1,8 @@
 import argparse
-import stripe
-import sys
-from typing import cast
 
+import stripe
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
-from utils.get_lead_id import get_lead_id
-from utils.prompt_user_for_choice import prompt_user_for_choice
-
 
 parser = argparse.ArgumentParser(
     description="Update Stripe charges with linked Close Opportunity IDs"

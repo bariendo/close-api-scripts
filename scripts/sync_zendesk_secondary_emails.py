@@ -3,12 +3,11 @@ import asyncio
 import json
 import logging
 import sys
-from CloseApiWrapper import CloseApiWrapper
-from ZendeskApiWrapper import ZendeskApiWrapper
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
-
+from ZendeskApiWrapper import ZendeskApiWrapper
 
 arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"

@@ -1,8 +1,7 @@
 import argparse
+
 from CloseApiWrapper import CloseApiWrapper
-
 from utils.get_api_key import get_api_key
-
 
 parser = argparse.ArgumentParser(description="Updates Template and Workflow Prefix.")
 parser.add_argument(

@@ -1,11 +1,10 @@
 import argparse
 import sys
-from CloseApiWrapper import CloseApiWrapper
 
+from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
 from utils.get_lead_id import get_lead_id
 from utils.prompt_user_for_choice import prompt_user_for_choice
-
 
 arg_parser = argparse.ArgumentParser(
     description="Enroll Lead in one of the Follow Up Workflows"

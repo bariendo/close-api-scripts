@@ -1,13 +1,13 @@
 import argparse
-from datetime import datetime
 import json
 import sys
+from datetime import datetime
 
-from closeio_api import APIError
 from CloseApiWrapper import CloseApiWrapper
-from ZendeskApiWrapper import ZendeskApiWrapper
+from closeio_api import APIError
 from utils.formatters import convert_utc_z_to_offset_format, get_full_name
 from utils.get_api_key import get_api_key
+from ZendeskApiWrapper import ZendeskApiWrapper
 
 arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
@@ -114,7 +114,7 @@ def get_last_close_lead_creation_date():
     if last_created_leads:
         if args.verbose:
             print(
-                f'Last created lead: {last_created_leads[0]["name"]} ({last_created_leads[0]["id"]})'
+                f"Last created lead: {last_created_leads[0]['name']} ({last_created_leads[0]['id']})"
             )
         last_lead_date_created = last_created_leads[0]["date_created"]
         last_lead_creation_date = datetime.fromisoformat(last_lead_date_created)

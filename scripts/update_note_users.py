@@ -2,11 +2,9 @@ import argparse
 import asyncio
 import json
 
-from closeio_api import APIError
 from CloseApiWrapper import CloseApiWrapper
-
+from closeio_api import APIError
 from utils.get_api_key import get_api_key
-
 
 # THIS SCRIPT HAS NEVER BEEN TESTED OR USED
 
