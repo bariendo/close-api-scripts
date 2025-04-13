@@ -36,7 +36,7 @@ zendesk_access_token = get_api_key("api.getbase.com", args.env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 

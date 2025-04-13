@@ -16,7 +16,7 @@ parser.add_argument("--from-prefix", "-f", required=True, help="Current Prefix")
 parser.add_argument("--to-prefix", "-t", required=True, help="New Prefix")
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"admin_{args.env}")
+api_key = get_api_key("api.close.com", f"{args.env}_admin")
 api = CloseApiWrapper(api_key)
 
 

@@ -38,7 +38,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"admin_{args.env}")
+api_key = get_api_key("api.close.com", f"{args.env}_admin")
 api = CloseApiWrapper(api_key)
 
 

@@ -23,7 +23,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.environment:
-    api_key = get_api_key("api.close.com", f"admin_{args.environment}")
+    api_key = get_api_key("api.close.com", f"{args.environment}_admin")
 elif args.api_key:
     api_key = args.api_key
 else:

@@ -79,7 +79,7 @@ async def toggle_webhook_statuses(
 
 async def main() -> None:
     args = parse_arguments()
-    api_key = get_api_key("api.close.com", f"admin_{args.env}")
+    api_key = get_api_key("api.close.com", f"{args.env}_admin")
     api = CloseApiWrapper(api_key)
 
     # Get all webhook subscriptions

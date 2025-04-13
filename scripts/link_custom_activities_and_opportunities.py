@@ -20,7 +20,7 @@ parser.add_argument("--verbose", "-v", action="store_true", help="verbose loggin
 args = parser.parse_args()
 
 env = "prod" if args.prod else "dev"
-api_key = get_api_key("api.close.com", f"admin_{env}")
+api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseApiWrapper(api_key)
 
 

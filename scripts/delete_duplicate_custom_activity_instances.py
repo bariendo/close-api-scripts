@@ -17,7 +17,7 @@ parser.add_argument("--custom-activity-type", "-t", help="Custom Activity type")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"admin_{args.env}")
+api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(api_key)
 
 

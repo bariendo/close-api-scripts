@@ -27,7 +27,7 @@ arg_parser.add_argument("--verbose", "-v", action="store_true", help="verbose lo
 args = arg_parser.parse_args()
 
 
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 api = CloseApiWrapper(close_api_key)
 
 

@@ -48,7 +48,7 @@ parser.add_argument("--verbose", "-v", action="store_true", help="verbose loggin
 args = parser.parse_args()
 
 if args.env:
-    api_key = get_api_key("api.close.com", f"admin_{args.env}")
+    api_key = get_api_key("api.close.com", f"{args.env}_admin")
 elif args.api_key:
     api_key = args.api_key
 else:

@@ -27,7 +27,7 @@ if args.old_value == args.new_value:
     print("Error: --old-value and --new-value must be different.")
     sys.exit(1)
 
-api_key = get_api_key("api.close.com", f"admin_{args.env}")
+api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(api_key)
 
 custom_field_id = close.get_prefixed_custom_field_id(

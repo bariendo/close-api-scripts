@@ -5,7 +5,7 @@ import subprocess
 def get_api_key(keychain_item_name, account_name):
     # Construct the command to retrieve the password
     command = (
-        f"security find-generic-password -a {account_name} -s {keychain_item_name} -w"
+        f"security find-internet-password -a {account_name} -s {keychain_item_name} -w"
     )
 
     # Use shlex to safely format the command

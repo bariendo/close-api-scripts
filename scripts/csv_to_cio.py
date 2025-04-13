@@ -253,7 +253,7 @@ if input("") != "y":
 
 ##############################################################################
 
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 api = CloseIO_API(close_api_key)
 
 progress_widgets = [

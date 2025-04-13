@@ -14,7 +14,7 @@ async def update_stale_opportunities(
     unresponsive_lead_status_label="Unresponsive",
     lost_opportunity_status_label="Lost",
 ):
-    api_key = get_api_key("api.close.com", f"admin_{env}")
+    api_key = get_api_key("api.close.com", f"{env}_admin")
     api = CloseApiWrapper(api_key)
 
     # Get lead status and opportunity status mappings

@@ -37,7 +37,7 @@ email_to_healthie_user_id = create_email_healthie_user_id_mapping(zendesk_contac
 print(f"{len(email_to_healthie_user_id)} email to Healthie user ID mappings")
 
 # Fetch Close Leads that lack Healthie User IDs
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 if args.env == "dev":

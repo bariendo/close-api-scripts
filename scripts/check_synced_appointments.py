@@ -21,7 +21,7 @@ parser.add_argument("--verbose", "-v", action="store_true", help="verbose loggin
 args = parser.parse_args()
 
 healthie_api_key = get_api_key("api.gethealthie.com", args.env)
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 healthie_user_id_custom_field_id = close.get_custom_field_id("lead", "healthie_user_id")

@@ -37,7 +37,7 @@ if not records:
     print(f"No records found in the CSV file")
     sys.exit(1)
 
-close_api_key = get_api_key("api.close.com", f"admin_{args.env}")
+close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 

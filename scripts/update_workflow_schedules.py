@@ -80,7 +80,7 @@ async def update_sequence_schedules(
     include_sequences: list[str] | None = None,
     exclude_sequences: list[str] | None = None,
 ) -> None:
-    api_key = get_api_key("api.close.com", f"admin_{env}")
+    api_key = get_api_key("api.close.com", f"{env}_admin")
     client = CloseApiWrapper(api_key)
     weekday_ints = [weekday_to_int(day) for day in weekdays]
     if None in weekday_ints:

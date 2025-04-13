@@ -93,7 +93,7 @@ async def update_custom_field_values(
 
 
 async def main(update_info: CustomFieldUpdate) -> None:
-    api_key = get_api_key("api.close.com", f"admin_{update_info.env}")
+    api_key = get_api_key("api.close.com", f"{update_info.env}_admin")
     client = CloseApiWrapper(api_key)
 
     successful, failed = await update_custom_field_values(client, update_info)
