@@ -12,14 +12,14 @@ dependencies = [
     "requests>=2.32.3",
 ]
 
-[tool.black]
-skip-string-normalization = true
-target-version = ['py37']
-line-length = 79
-exclude = '''
-/(
-    \.git
-  | \.venv
-  | venv
-)/
-'''
+[tool.ruff]
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.format]
+quote-style = "preserve"
