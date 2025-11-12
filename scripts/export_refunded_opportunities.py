@@ -26,8 +26,17 @@ def parse_args() -> argparse.Namespace:
             "with lead-level fields, to CSV."
         )
     )
-    parser.add_argument("start", help="Start date (YYYY-MM-DD)")
-    parser.add_argument("end", help="End date (YYYY-MM-DD)")
+    parser.add_argument(
+        "-f",
+        "--won-from",
+        required=True,
+        help="Start date for date_won filter (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "-t",
+        "--won-to",
+        help="End date for date_won filter (YYYY-MM-DD). Defaults to today.",
+    )
     parser.add_argument(
         "-p", "--prod", action="store_true", help="production environment"
     )
@@ -201,8 +210,8 @@ def main() -> int:
     args = parse_args()
 
     # Parse dates
-    start_dt = parse_date(args.start)
-    end_dt = parse_date(args.end)
+    start_dt = parse_date(args.won_from)
+    end_dt = parse_date(args.won_to) if args.won_to else date.today()
     if end_dt < start_dt:
         raise ValueError("end date must be on or after start date")
 
