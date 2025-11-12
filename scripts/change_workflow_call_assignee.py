@@ -14,12 +14,7 @@ logging.basicConfig(
 
 parser = argparse.ArgumentParser(description="Change workflow call assignee")
 group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+group.add_argument("-p", "--prod", action="store_true", help="production environment")
 group.add_argument("--api-key", "-k", help="API Key")
 parser.add_argument(
     "--from-assignee",
@@ -32,17 +27,15 @@ parser.add_argument(
     "-t",
     help="New call assignee",
 )
-parser.add_argument("--payload", "-p")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-if args.env:
-    api_key = get_api_key("api.close.com", f"{args.env}_admin")
-elif args.api_key:
+env = "prod" if args.prod else "dev"
+
+if args.api_key:
     api_key = args.api_key
 else:
-    print("Either environment or API key must be provided.")
-    sys.exit(1)
+    api_key = get_api_key("api.close.com", f"{env}_admin")
 
 api = CloseApiWrapper(api_key)
 
@@ -167,7 +160,7 @@ async def main():
 
     if delete_endpoints:
         with open(
-            f"output/workflow_subscriptions_deleted-{args.env}.json",
+            f"output/workflow_subscriptions_deleted-{env}.json",
             "w",
         ) as f:
             json.dump(delete_endpoints, f)
@@ -177,7 +170,7 @@ async def main():
 
     if reassign_payloads:
         with open(
-            f"output/workflow_subscriptions_payload-{args.env}.json",
+            f"output/workflow_subscriptions_payload-{env}.json",
             "w",
         ) as f:
             json.dump(reassign_payloads, f)
@@ -188,7 +181,7 @@ async def main():
         if created_subscriptions:
             logging.info(f"Reassigned {len(created_subscriptions)} subscriptions.")
             with open(
-                f"output/workflow_subscriptions_created-{args.env}.json",
+                f"output/workflow_subscriptions_created-{env}.json",
                 "w",
             ) as f:
                 json.dump(created_subscriptions, f)
@@ -196,7 +189,7 @@ async def main():
         if failed_creations:
             logging.info(f"{len(failed_creations)} subscriptions could not be created.")
             with open(
-                f"output/workflow_subscriptions-failed-{args.env}.json",
+                f"output/workflow_subscriptions-failed-{env}.json",
                 "w",
             ) as f:
                 json.dump(failed_creations, f)

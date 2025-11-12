@@ -13,11 +13,7 @@ arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--since", "-s", help="Starting time.")
 arg_parser.add_argument(
@@ -25,22 +21,24 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
+
 # Zendesk API client
-zendesk_access_token = get_api_key("api.getbase.com", args.env)
+zendesk_access_token = get_api_key("api.getbase.com", env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
-if args.env == "dev":
+if env == "dev":
     patient_navigator_field_id = "custom.cf_fzBs9wJXD6nBEB9VK4BGiDyHblMuzJIGiHmpnhy63Yx"
     # patient_navigator_field_id = "custom.cf_4rzCyZ6WLz7M4seash24mlx1TXM4JGvh785NqkngAl9"
     preferred_language_field_id = (
         "custom.cf_T9IwO37LOVzLJ7G1SJdvpqoPF7rfJ1L4UckJpetMmnx"
     )
     healthie_user_id_field_id = "custom.cf_4rzCyZ6WLz7M4seash24mlx1TXM4JGvh785NqkngAl9"
-elif args.env == "prod":
+elif env == "prod":
     patient_navigator_field_id = "custom.cf_sxqmodpl8iU0TIgi57m8B6K9bFRjxeqMJAMaSvG29gr"
     # patient_navigator_field_id = "custom.cf_8ziVuLyvS1SE5dkH2QS6h919rMvs1uRDepx5ORwRd12"
     preferred_language_field_id = (
@@ -359,7 +357,7 @@ def sync_data(zendesk_resource_type, close_object_type):
         print(f"No new {zendesk_resource_type} since {last_lead_creation_date}")
         return
 
-    with open(f"output/zendesk_{zendesk_resource_type}-{args.env}.json", "w") as f:
+    with open(f"output/zendesk_{zendesk_resource_type}-{env}.json", "w") as f:
         json.dump(zendesk_data, f)
 
     function_mapping = {
@@ -413,7 +411,7 @@ def sync_data(zendesk_resource_type, close_object_type):
 
     print(f"Created {len(created_objects)} Close {close_object_type}s")
     with open(
-        f"output/{obj_type}s_synced_from_zendesk_{zendesk_resource_type}-{args.env}.json",
+        f"output/{obj_type}s_synced_from_zendesk_{zendesk_resource_type}-{env}.json",
         "w",
     ) as f:
         json.dump(created_objects, f)
@@ -421,7 +419,7 @@ def sync_data(zendesk_resource_type, close_object_type):
     if failed_objects:
         print(f"{len(failed_objects)} Close {close_object_type}s")
         with open(
-            f"output/{obj_type}s_not_synced_from_zendesk_{zendesk_resource_type}-{args.env}.json",
+            f"output/{obj_type}s_not_synced_from_zendesk_{zendesk_resource_type}-{env}.json",
             "w",
         ) as f:
             json.dump(failed_objects, f)

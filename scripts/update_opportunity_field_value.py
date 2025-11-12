@@ -8,13 +8,7 @@ from utils.get_api_key import get_api_key
 parser = argparse.ArgumentParser(
     description="Update custom field value for opportunities"
 )
-parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--custom-field", "-f", required=True, help="Custom field name")
 parser.add_argument("--old-value", "-o", required=True, help="Current value to match")
 parser.add_argument("--new-value", "-n", required=True, help="New value to set")
@@ -27,7 +21,9 @@ if args.old_value == args.new_value:
     print("Error: --old-value and --new-value must be different.")
     sys.exit(1)
 
-api_key = get_api_key("api.close.com", f"{args.env}_admin")
+env = "prod" if args.prod else "dev"
+
+api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(api_key)
 
 custom_field_id = close.get_prefixed_custom_field_id(
@@ -91,8 +87,6 @@ for opportunity in opportunities:
 print(f"Updated {len(updated_opportunities)} opportunities")
 
 if updated_opportunities:
-    with open(
-        f"output/updated_opportunities_{args.custom_field}-{args.env}.json", "w"
-    ) as f:
+    with open(f"output/updated_opportunities_{args.custom_field}-{env}.json", "w") as f:
         json.dump(updated_opportunities, f)
     print("Updated opportunities saved to disk")

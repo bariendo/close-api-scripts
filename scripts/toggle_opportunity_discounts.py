@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 from typing import Any
+
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
 
@@ -88,8 +89,7 @@ async def main():
 
     # Initialize API wrapper
     env = "prod" if args.prod else "dev"
-    # api_key = get_api_key("api.close.com", f"{env}_admin")
-    
+    api_key = get_api_key("api.close.com", f"{env}_admin")
     if not api_key:
         raise SystemExit(
             "Missing API key. Add a Keychain item for api.close.com with account {env}_admin.".format(
@@ -161,7 +161,9 @@ async def main():
     }
 
     # Search for opportunities
-    print(f"Searching for opportunities not updated in the last {args.updated_before_minutes} minutes (max: {args.max_opportunities})...")
+    print(
+        f"Searching for opportunities not updated in the last {args.updated_before_minutes} minutes (max: {args.max_opportunities})..."
+    )
     opportunities = api.search(
         query=query,
         object_type="opportunity",
@@ -198,7 +200,7 @@ async def main():
     )
 
     # Print results
-    print(f"\n--- Update Results ---")
+    print("\n--- Update Results ---")
     print(f"Successfully updated: {len(successful_updates)} opportunities")
     print(f"Failed updates: {len(failed_updates)} opportunities")
 

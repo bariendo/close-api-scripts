@@ -13,11 +13,7 @@ arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--data-path", "-f", required=True, help="Path to the CSV file")
 arg_parser.add_argument(
@@ -25,6 +21,7 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
@@ -37,7 +34,7 @@ if not os.path.exists(args.data_path):
 
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -115,7 +112,7 @@ for lead in leads:
 if created_leads:
     print(f"Created {len(created_leads)} Leads")
     with open(
-        f"output/leads_imported_from_csv-{args.env}.json",
+        f"output/leads_imported_from_csv-{env}.json",
         "w",
     ) as f:
         json.dump(created_leads, f)

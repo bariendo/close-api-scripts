@@ -7,17 +7,14 @@ from utils.get_api_key import get_api_key
 parser = argparse.ArgumentParser(
     description="Update Stripe charges with linked Close Opportunity IDs"
 )
-parser.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"{args.env}_admin")
-stripe.api_key = get_api_key("api.stripe.com", args.env)
+env = "prod" if args.prod else "dev"
+
+api_key = get_api_key("api.close.com", f"{env}_admin")
+stripe.api_key = get_api_key("api.stripe.com", env)
 
 close = CloseApiWrapper(api_key)
 

@@ -13,11 +13,7 @@ arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument(
     "--field", "-f", required=True, help="Opportunity custom field name"
@@ -27,16 +23,18 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
 # Zendesk API client
-zendesk_access_token = get_api_key("api.getbase.com", args.env)
+zendesk_access_token = get_api_key("api.getbase.com", env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -141,7 +139,7 @@ async def main():
     if updated_opps:
         logging.info(f"Updated {len(updated_opps)} opportunities.")
         with open(
-            f"output/opportunities_updated_with_services-{args.env}.json",
+            f"output/opportunities_updated_with_services-{env}.json",
             "w",
         ) as f:
             json.dump(updated_opps, f)

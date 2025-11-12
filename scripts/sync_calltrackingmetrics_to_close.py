@@ -15,11 +15,7 @@ arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument(
     "--data-path", "-f", required=True, help="Path to CTM data file"
@@ -29,6 +25,7 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
@@ -41,7 +38,7 @@ if not os.path.exists(args.data_path):
 
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -334,7 +331,7 @@ async def main():
         if created_activites:
             logging.info(f"Synced {len(created_activites)} activities.")
             with open(
-                f"output/activites_created_from_calltrackingmetrics-{args.env}.json",
+                f"output/activites_created_from_calltrackingmetrics-{env}.json",
                 "w",
             ) as f:
                 json.dump(created_activites, f)
@@ -344,7 +341,7 @@ async def main():
                 f"{len(failed_activities)} CallTrackingMetrics activities could not be posted."
             )
             with open(
-                f"output/unsynced_ctm_activities-failed-{args.env}.json",
+                f"output/unsynced_ctm_activities-failed-{env}.json",
                 "w",
             ) as f:
                 json.dump(failed_activities, f)
@@ -356,7 +353,7 @@ async def main():
             f"{len(unsynced_ctm_activities)} CallTrackingMetrics activities not synced."
         )
         with open(
-            f"output/unsynced_ctm_activities-{args.env}.json",
+            f"output/unsynced_ctm_activities-{env}.json",
             "w",
         ) as f:
             json.dump(unsynced_ctm_activities, f)
@@ -365,7 +362,7 @@ async def main():
 
     print_failure_reasons_and_save_details_to_csv(
         failure_counts,
-        f"output/calltrackingmetrics_sync_failure_reasons-{args.env}.csv",
+        f"output/calltrackingmetrics_sync_failure_reasons-{env}.csv",
     )
 
 

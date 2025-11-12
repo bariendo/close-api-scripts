@@ -9,12 +9,7 @@ parser = argparse.ArgumentParser(
     description="Delete all the opportunities in a given status."
 )
 group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument(
-    "--environment",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+group.add_argument("-p", "--prod", action="store_true", help="production environment")
 group.add_argument("--api-key", "-k", help="API Key")
 parser.add_argument("--status", "-s", type=str, required=True, help="Status label")
 parser.add_argument(
@@ -22,13 +17,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.environment:
-    api_key = get_api_key("api.close.com", f"{args.environment}_admin")
-elif args.api_key:
+env = "prod" if args.prod else "dev"
+
+if args.api_key:
     api_key = args.api_key
 else:
-    print("Either environment or API key must be provided.")
-    sys.exit(1)
+    api_key = get_api_key("api.close.com", f"{env}_admin")
 
 api = CloseApiWrapper(api_key)
 
@@ -70,7 +64,7 @@ opportunities = api.get_all(
 )
 
 write_csv(
-    f"output/deleted_opportunities-{args.environment}-{status_id}.csv",
+    f"output/deleted_opportunities-{env}-{status_id}.csv",
     opportunity_fields,
     opportunities,
 )

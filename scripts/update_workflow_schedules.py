@@ -8,7 +8,7 @@ from utils.get_api_key import get_api_key
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Update workflow schedules in Close.")
     parser.add_argument(
-        "env", choices=["dev", "prod"], help="Target environment (dev/prod)"
+        "-p", "--prod", action="store_true", help="production environment"
     )
     parser.add_argument(
         "weekdays", help="Comma-separated list of weekdays to update (e.g., Mon, Tue)"
@@ -116,7 +116,7 @@ async def update_sequence_schedules(
 if __name__ == "__main__":
     args = parse_arguments()
 
-    env = args.env
+    env = "prod" if args.prod else "dev"
     weekdays = args.weekdays.split(",")
     turn_on = args.action == "on"
     include_sequences = args.include.split(",") if args.include else None

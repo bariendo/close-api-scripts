@@ -13,11 +13,7 @@ arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument(
     "--field-name", "-f", required=True, help="Secondary email field name"
@@ -27,17 +23,19 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
 
 # Zendesk API client
-zendesk_access_token = get_api_key("api.getbase.com", args.env)
+zendesk_access_token = get_api_key("api.getbase.com", env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -125,7 +123,7 @@ async def main():
         if updated_contacts:
             logging.info(f"Updated {len(updated_contacts)} contacts.")
             with open(
-                f"output/contacts_updated_with_secondary_email-{args.env}.json",
+                f"output/contacts_updated_with_secondary_email-{env}.json",
                 "w",
             ) as f:
                 json.dump(updated_contacts, f)

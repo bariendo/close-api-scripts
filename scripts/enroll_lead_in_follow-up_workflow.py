@@ -10,11 +10,7 @@ arg_parser = argparse.ArgumentParser(
     description="Enroll Lead in one of the Follow Up Workflows"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--lead-id", "-l", required=True, help="Lead ID")
 arg_parser.add_argument(
@@ -22,8 +18,9 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 

@@ -18,13 +18,7 @@ from requests.exceptions import ConnectionError
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Import leads from CSV file")
-parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument(
     "--skip_duplicates",
     action="store_true",
@@ -37,6 +31,8 @@ parser.add_argument(
 )
 parser.add_argument("file", help="Path to the csv file")
 args = parser.parse_args()
+
+env = "prod" if args.prod else "dev"
 
 reader = csv.DictReader(open(args.file))
 headers = reader.fieldnames
@@ -251,7 +247,7 @@ if input("") != "y":
 
 ##############################################################################
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseIO_API(close_api_key)
 
 progress_widgets = [

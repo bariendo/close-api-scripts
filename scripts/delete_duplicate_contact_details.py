@@ -17,12 +17,7 @@ parser = argparse.ArgumentParser(
     description="Find duplicate contact details on a contact in your Close org"
 )
 group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+group.add_argument("-p", "--prod", action="store_true", help="production environment")
 group.add_argument("--api-key", "-k", help="API Key")
 parser.add_argument(
     "--detail-type",
@@ -34,13 +29,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.env:
-    api_key = get_api_key("api.close.com", f"{args.env}_admin")
-elif args.api_key:
+env = "prod" if args.prod else "dev"
+
+if args.api_key:
     api_key = args.api_key
 else:
-    print("Either environment or API key must be provided.")
-    sys.exit(1)
+    api_key = get_api_key("api.close.com", f"{env}_admin")
 
 # Initialize Close API Wrapper
 api = CloseApiWrapper(api_key)
@@ -160,7 +154,7 @@ for contact in contacts:
         diffs.append(diff)
 
 if diffs:
-    with open(f"updated_contacts-{args.env}.json", "w") as f:
+    with open(f"updated_contacts-{env}.json", "w") as f:
         json.dump(diffs, f)
 
 

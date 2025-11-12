@@ -6,13 +6,7 @@ from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Delete leads")
-parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("--last-minutes", "-m", type=int, help="Last minutes")
 group.add_argument(
@@ -27,8 +21,9 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseApiWrapper(close_api_key)
 
 # Array of Lead IDs. Add the IDs you want to restore here.
@@ -76,7 +71,7 @@ elif args.last_minutes:
         },
         fields=["id", "name"],
     )
-    with open(f"output/deleted_leads-{args.env}.json", "w") as f:
+    with open(f"output/deleted_leads-{env}.json", "w") as f:
         json.dump(queried_leads, f)
     lead_ids = [lead["id"] for lead in queried_leads]
 else:

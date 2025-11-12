@@ -14,11 +14,7 @@ arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to BigQuery"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument(
     "--bigquery-credentials-path",
@@ -26,9 +22,7 @@ arg_parser.add_argument(
     required=True,
     help="Path to BigQuery credentials",
 )
-arg_parser.add_argument(
-    "--project-id", "-p", required=True, help="Google Cloud project ID"
-)
+arg_parser.add_argument("--project-id", required=True, help="Google Cloud project ID")
 arg_parser.add_argument("--dataset-id", "-d", required=True, help="BigQuery dataset ID")
 arg_parser.add_argument("--table-name", "-t", required=True, help="BigQuery table name")
 arg_parser.add_argument("--schema-path", "-s", help="Path to BigQuery schema file")
@@ -38,6 +32,7 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
 if args.schema_path:
     if not os.path.exists(args.schema_path):
@@ -50,8 +45,8 @@ if args.data_path:
         sys.exit(0)
 
 
-auth_token = get_api_key("api.calltrackingmetrics.com", args.env)
-debug = args.env == "dev"
+auth_token = get_api_key("api.calltrackingmetrics.com", env)
+debug = env == "dev"
 
 
 logging.basicConfig(
@@ -70,7 +65,7 @@ async def get_ctm_activities(start_date: str | None = None):
         if calls:
             if args.verbose:
                 logging.info(f"Fetched {len(calls)} calls")
-            file_path = f"output/calltrackingmetrics-calls-{args.env}.json"
+            file_path = f"output/calltrackingmetrics-calls-{env}.json"
             with open(file_path, "w") as f:
                 json.dump(calls, f)
             # return file_path

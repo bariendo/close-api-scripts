@@ -10,18 +10,14 @@ from utils.csv import write_csv
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Check Healthie appointment sync status")
-parser.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-    required=True,
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-healthie_api_key = get_api_key("api.gethealthie.com", args.env)
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+env = "prod" if args.prod else "dev"
+
+healthie_api_key = get_api_key("api.gethealthie.com", env)
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 healthie_user_id_custom_field_id = close.get_custom_field_id("lead", "healthie_user_id")

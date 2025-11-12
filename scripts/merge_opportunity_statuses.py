@@ -7,12 +7,7 @@ from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Merge 'Lost' opportunity statuses.")
 group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+group.add_argument("-p", "--prod", action="store_true", help="production environment")
 group.add_argument("--api-key", "-k", help="API Key")
 parser.add_argument(
     "--source-status", "-s", type=str, required=True, help="Source status label"
@@ -25,13 +20,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.env:
-    api_key = get_api_key("api.close.com", f"{args.env}_admin")
-elif args.api_key:
+env = "prod" if args.prod else "dev"
+
+if args.api_key:
     api_key = args.api_key
 else:
-    print("Either environment or API key must be provided.")
-    sys.exit(1)
+    api_key = get_api_key("api.close.com", f"{env}_admin")
 
 api = CloseApiWrapper(api_key)
 
@@ -92,7 +86,7 @@ for idx, opp in enumerate(opportunities):
 
 if updated_opps:
     print(f"Updated {len(updated_opps)} out of {len(opportunities)} opportunities.")
-    with open(f"output/opportunities_status_merged-{args.env}.json", "w") as f:
+    with open(f"output/opportunities_status_merged-{env}.json", "w") as f:
         json.dump(updated_opps, f)
 else:
     print("No opportunities were updated.")

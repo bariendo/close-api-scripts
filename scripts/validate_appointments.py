@@ -7,17 +7,13 @@ import requests
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Check Healthie appointment sync status")
-parser.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-    required=True,
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-healthie_api_key = get_api_key("api.gethealthie.com", args.env)
+env = "prod" if args.prod else "dev"
+
+healthie_api_key = get_api_key("api.gethealthie.com", env)
 
 
 async def fetch_graphql(url, query, variables=None, headers=None):

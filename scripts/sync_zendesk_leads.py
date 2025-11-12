@@ -17,11 +17,7 @@ arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--since", "-s", help="Starting time.")
 arg_parser.add_argument(
@@ -29,12 +25,14 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
+
 # Zendesk API client
-zendesk_access_token = get_api_key("api.getbase.com", args.env)
+zendesk_access_token = get_api_key("api.getbase.com", env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 # Close API client
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -151,7 +149,7 @@ async def main():
     if update_payloads:
         logging.info(f"Updating {len(update_payloads)} contacts...")
         with open(
-            f"output/contact_updates_from_zendesk_leads-{args.env}.json",
+            f"output/contact_updates_from_zendesk_leads-{env}.json",
             "w",
         ) as f:
             json.dump(update_payloads, f)
@@ -162,7 +160,7 @@ async def main():
         if updated_contacts:
             logging.info(f"Updated {len(updated_contacts)} contacts.")
             with open(
-                f"output/contacts_updated_from_zendesk_leads-{args.env}.json",
+                f"output/contacts_updated_from_zendesk_leads-{env}.json",
                 "w",
             ) as f:
                 json.dump(updated_contacts, f)
@@ -170,7 +168,7 @@ async def main():
         if failed_updates:
             logging.info(f"{len(failed_updates)} updates could not be made.")
             with open(
-                f"output/contact_updates_from_zendesk_leads-failed-{args.env}.json",
+                f"output/contact_updates_from_zendesk_leads-failed-{env}.json",
                 "w",
             ) as f:
                 json.dump(failed_updates, f)

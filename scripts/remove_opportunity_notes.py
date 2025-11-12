@@ -9,24 +9,21 @@ arg_parser = argparse.ArgumentParser(
     description="Remove Opportunity notes matching Lead names."
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
 # Fetch Lead Source values
-if args.env == "dev":
+if env == "dev":
     lead_source_field_id = "cf_hHFZuGDsQMlYUVsON5rms6JaPudAeogJCYtXNs34AaS"
-elif args.env == "prod":
+elif env == "prod":
     lead_source_field_id = "cf_I4o5fFnU8bWIwi4q7b0YpS1RIMWICR5qrhJOrc9MuA7"
 else:
     print("Unsupported environment")
@@ -83,14 +80,14 @@ for opp in opportunities:
 
 if updated_opps:
     print(f"Updated {len(updated_opps)} out of {len(opportunities)} opportunities.")
-    with open(f"output/opportunities_updated-{args.env}.json", "w") as f:
+    with open(f"output/opportunities_updated-{env}.json", "w") as f:
         json.dump(updated_opps, f)
 else:
     print("No opportunities were updated.")
 
 if updated_leads:
     print(f"Updated {len(updated_leads)} leads with Lead Source values.")
-    with open(f"output/lead_source_updated-{args.env}.json", "w") as f:
+    with open(f"output/lead_source_updated-{env}.json", "w") as f:
         json.dump(updated_leads, f)
 else:
     print("No leads were updated.")

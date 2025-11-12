@@ -9,13 +9,7 @@ from utils.get_api_key import get_api_key
 parser = argparse.ArgumentParser(
     description="Export Close custom activity instances within a date range into a JSON file"
 )
-parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument(
     "--custom-activity-type",
     "-t",
@@ -38,7 +32,9 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"{args.env}_admin")
+env = "prod" if args.prod else "dev"
+
+api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseApiWrapper(api_key)
 
 
@@ -70,7 +66,7 @@ async def main():
             f"{len(custom_activity_instances)} {args.custom_activity_type} instances"
         )
         with open(
-            f"output/custom_activity_instances-{args.custom_activity_type}-{args.env}.json",
+            f"output/custom_activity_instances-{args.custom_activity_type}-{env}.json",
             "w",
         ) as f:
             json.dump(custom_activity_instances, f)

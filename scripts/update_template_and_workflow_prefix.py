@@ -4,18 +4,14 @@ from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(description="Updates Template and Workflow Prefix.")
-parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--from-prefix", "-f", required=True, help="Current Prefix")
 parser.add_argument("--to-prefix", "-t", required=True, help="New Prefix")
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"{args.env}_admin")
+env = "prod" if args.prod else "dev"
+
+api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseApiWrapper(api_key)
 
 

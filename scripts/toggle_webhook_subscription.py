@@ -10,7 +10,7 @@ def parse_arguments() -> argparse.Namespace:
         description="List and toggle webhook subscription statuses"
     )
     parser.add_argument(
-        "env", choices=["dev", "prod"], help="Target environment (dev/prod)"
+        "-p", "--prod", action="store_true", help="production environment"
     )
     return parser.parse_args()
 
@@ -79,7 +79,8 @@ async def toggle_webhook_statuses(
 
 async def main() -> None:
     args = parse_arguments()
-    api_key = get_api_key("api.close.com", f"{args.env}_admin")
+    env = "prod" if args.prod else "dev"
+    api_key = get_api_key("api.close.com", f"{env}_admin")
     api = CloseApiWrapper(api_key)
 
     # Get all webhook subscriptions

@@ -11,7 +11,7 @@ from utils.get_api_key import get_api_key
 parser = argparse.ArgumentParser(
     description="Replace Lost opportunity with Lead Qualification form"
 )
-parser.add_argument("--prod", "-p", action="store_true", help="production environment")
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument(
     "--custom-activity-type", "-t", help="Custom Activity type", required=True
 )

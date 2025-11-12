@@ -7,17 +7,14 @@ from utils.get_api_key import get_api_key
 parser = argparse.ArgumentParser(
     description="Delete duplicate Custom Activity instances"
 )
-parser.add_argument(
-    "--env",
-    "-e",
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
-)
+parser.add_argument("-p", "--prod", action="store_true", help="production environment")
 parser.add_argument("--custom-activity-type", "-t", help="Custom Activity type")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
 
-api_key = get_api_key("api.close.com", f"{args.env}_admin")
+env = "prod" if args.prod else "dev"
+
+api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(api_key)
 
 

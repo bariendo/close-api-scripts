@@ -10,13 +10,11 @@ arg_parser = argparse.ArgumentParser(
     description="Copy Healthie user IDs from Zendesk to Close"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 args = arg_parser.parse_args()
+
+env = "prod" if args.prod else "dev"
 
 
 def create_email_healthie_user_id_mapping(contacts):
@@ -28,7 +26,7 @@ def create_email_healthie_user_id_mapping(contacts):
 
 
 # Fetch Healthie user IDs stored in Zendesk contacts
-zendesk_access_token = get_api_key("api.getbase.com", args.env)
+zendesk_access_token = get_api_key("api.getbase.com", env)
 zendesk = ZendeskApiWrapper(access_token=zendesk_access_token)
 
 zendesk_contacts = zendesk.get_all("contacts")
@@ -37,12 +35,12 @@ email_to_healthie_user_id = create_email_healthie_user_id_mapping(zendesk_contac
 print(f"{len(email_to_healthie_user_id)} email to Healthie user ID mappings")
 
 # Fetch Close Leads that lack Healthie User IDs
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
-if args.env == "dev":
+if env == "dev":
     healthie_user_id_field_id = "custom.cf_4rzCyZ6WLz7M4seash24mlx1TXM4JGvh785NqkngAl9"
-elif args.env == "prod":
+elif env == "prod":
     healthie_user_id_field_id = "custom.cf_8ziVuLyvS1SE5dkH2QS6h919rMvs1uRDepx5ORwRd12"
 else:
     print("Unsupported environment")
@@ -108,12 +106,12 @@ print(f"{leads_without_primary_email_count} leads do not have primary email.")
 
 common_headers = ["lead_id", "lead_name", "primary_email"]
 write_csv(
-    f"output/leads_updated_with_healthie_user_id-{args.env}.csv",
+    f"output/leads_updated_with_healthie_user_id-{env}.csv",
     common_headers + ["healthie_user_id"],
     updated_leads,
 )
 write_csv(
-    f"output/leads_without_healthie_user_id-{args.env}.csv",
+    f"output/leads_without_healthie_user_id-{env}.csv",
     common_headers,
     leads_without_healthie_user_id,
 )

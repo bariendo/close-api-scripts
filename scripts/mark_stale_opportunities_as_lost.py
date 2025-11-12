@@ -298,7 +298,7 @@ def main():
         help="Perform a dry run without making any changes",
     )
     parser.add_argument(
-        "--prod", "-p", action="store_true", help="production environment"
+        "-p", "--prod", action="store_true", help="production environment"
     )
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Show detailed information"

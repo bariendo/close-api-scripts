@@ -10,11 +10,7 @@ from utils.get_api_key import get_api_key
 
 arg_parser = argparse.ArgumentParser(description="Update Note user to match created_by")
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument(
     "--user",
@@ -24,8 +20,9 @@ arg_parser.add_argument(
 arg_parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 api = CloseApiWrapper(close_api_key)
 
 
@@ -99,14 +96,14 @@ async def main():
     updated_notes, errored_notes = await update_notes(notes)
     if updated_notes:
         print(f"Updated {len(updated_notes)} out of {len(notes)} notes.")
-        with open(f"output/notes_updated-{args.env}.json", "w") as f:
+        with open(f"output/notes_updated-{env}.json", "w") as f:
             json.dump(updated_notes, f)
     else:
         print("No leads were updated.")
 
     if errored_notes:
         print(f"{len(errored_notes)} leads could not be updated.")
-        with open(f"output/notes_unchanged-{args.env}.json", "w") as f:
+        with open(f"output/notes_unchanged-{env}.json", "w") as f:
             json.dump(errored_notes, f)
 
 

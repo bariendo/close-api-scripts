@@ -19,7 +19,7 @@ class CustomFieldUpdate:
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Update custom field values in Close.")
     parser.add_argument(
-        "env", choices=["dev", "prod"], help="Target environment (dev/prod)"
+        "-p", "--prod", action="store_true", help="production environment"
     )
     parser.add_argument(
         "object_type",
@@ -102,7 +102,7 @@ async def main(update_info: CustomFieldUpdate) -> None:
     if successful:
         print(f"\nSuccessfully updated {len(successful)} {update_info.object_type}s")
         with open(
-            f"output/{update_info.object_type}s_updated_with_{update_info.field_name}-{args.env}.json",
+            f"output/{update_info.object_type}s_updated_with_{update_info.field_name}-{update_info.env}.json",
             "w",
         ) as f:
             json.dump(successful, f)
@@ -112,7 +112,7 @@ async def main(update_info: CustomFieldUpdate) -> None:
     if failed:
         print(f"Failed to update {len(failed)} {update_info.object_type}s:")
         with open(
-            f"output/{update_info.object_type}s_unchanged_with_{update_info.field_name}-{args.env}.json",
+            f"output/{update_info.object_type}s_unchanged_with_{update_info.field_name}-{update_info.env}.json",
             "w",
         ) as f:
             json.dump(failed, f)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     args = parse_arguments()
 
     update_info = CustomFieldUpdate(
-        env=args.env,
+        env="prod" if args.prod else "dev",
         object_type=args.object_type,
         field_name=args.field_name,
         old_value=args.old_value,

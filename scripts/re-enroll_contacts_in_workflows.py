@@ -9,11 +9,7 @@ arg_parser = argparse.ArgumentParser(
     description="Unenroll & re-enroll untouched Contacts in Workflows"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--created-before", "-b", help="Created before")
 arg_parser.add_argument("--workflow-name-prefix", "-w", help="Workflow name prefix")
@@ -22,8 +18,9 @@ arg_parser.add_argument(
 )
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
 
@@ -142,7 +139,7 @@ async def main():
         return
 
     with open(
-        f"output/workflow_subscriptions_unenrolled-{args.env}.json",
+        f"output/workflow_subscriptions_unenrolled-{env}.json",
         "w",
     ) as f:
         json.dump(subscriptions, f)
@@ -167,7 +164,7 @@ async def main():
     if post_subscriptions:
         print(f"Recreated {len(post_subscriptions)} subscriptions.")
         with open(
-            f"output/workflow_subscriptions_recreated-{args.env}.json",
+            f"output/workflow_subscriptions_recreated-{env}.json",
             "w",
         ) as f:
             json.dump(post_subscriptions, f)
@@ -175,7 +172,7 @@ async def main():
     if errors:
         print(f"{len(errors)} subscriptions could not be recreated.")
         with open(
-            f"output/workflow_subscriptions_recreation_failed-{args.env}.json",
+            f"output/workflow_subscriptions_recreation_failed-{env}.json",
             "w",
         ) as f:
             json.dump(errors, f)

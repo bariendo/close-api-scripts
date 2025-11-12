@@ -10,22 +10,19 @@ arg_parser = argparse.ArgumentParser(
     description="Assign Leads to Patient Navigators based on Deal Owners, Task Assignees, and Note Creators"
 )
 arg_parser.add_argument(
-    "--env",
-    "-e",
-    required=True,
-    choices=["dev", "prod"],
-    help="Target environment (dev/prod)",
+    "-p", "--prod", action="store_true", help="production environment"
 )
 arg_parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = arg_parser.parse_args()
 
+env = "prod" if args.prod else "dev"
 
-close_api_key = get_api_key("api.close.com", f"{args.env}_admin")
+close_api_key = get_api_key("api.close.com", f"{env}_admin")
 close = CloseApiWrapper(close_api_key)
 
-if args.env == "dev":
+if env == "dev":
     patient_navigator_field_id = "cf_fzBs9wJXD6nBEB9VK4BGiDyHblMuzJIGiHmpnhy63Yx"
-elif args.env == "prod":
+elif env == "prod":
     patient_navigator_field_id = "cf_sxqmodpl8iU0TIgi57m8B6K9bFRjxeqMJAMaSvG29gr"
 else:
     print("Unsupported environment")
@@ -261,12 +258,12 @@ for lead in unassigned_leads:
 
 if updated_leads:
     print(f"Updated {len(updated_leads)} out of {len(unassigned_leads)} leads.")
-    with open(f"output/leads_updated_with_pn-{args.env}.json", "w") as f:
+    with open(f"output/leads_updated_with_pn-{env}.json", "w") as f:
         json.dump(updated_leads, f)
 else:
     print("No leads were updated.")
 
 if unchanged_leads:
     print(f"{len(unchanged_leads)} leads could not be updated.")
-    with open(f"output/leads_unchanged_with_pn-{args.env}.json", "w") as f:
+    with open(f"output/leads_unchanged_with_pn-{env}.json", "w") as f:
         json.dump(unchanged_leads, f)

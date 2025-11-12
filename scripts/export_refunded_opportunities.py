@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("start", help="Start date (YYYY-MM-DD)")
     parser.add_argument("end", help="End date (YYYY-MM-DD)")
     parser.add_argument(
-        "--prod", "-p", action="store_true", help="production environment"
+        "-p", "--prod", action="store_true", help="production environment"
     )
     parser.add_argument(
         "--output",
