@@ -9,12 +9,10 @@ from closeio_api import APIError
 from utils.get_api_key import get_api_key
 
 parser = argparse.ArgumentParser(
-    description="Replace Lost opportunity with Lead Qualification form"
+    description="Link custom activity instances to their corresponding opportunities"
 )
+parser.add_argument("custom_activity_type", help="Custom Activity type")
 parser.add_argument("-p", "--prod", action="store_true", help="production environment")
-parser.add_argument(
-    "--custom-activity-type", "-t", help="Custom Activity type", required=True
-)
 parser.add_argument("--dry-run", "-d", action="store_true", help="dry run")
 parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
 args = parser.parse_args()
