@@ -52,33 +52,34 @@ def read_json_file(path: str):
 
 FailureReason = namedtuple("FailureReason", ["reason", "details"])
 
-ADMIN = ""
-CM = ""
-SS = ""
-DP = ""
-CD_OLD = ""
-CD_NEW = ""
-RHQ = ""
-RHQ_NUMBERS = set([""])
+ADMIN = "a@example.com"
+CM = "b@example.com"
+SS = "c@example.com"
+DP = "d@example.com"
+CD_OLD = "e@example.com"
+CD_NEW = "f@example.com"
+RHQ = "g@example.com"
+RHQ_NUMBERS = set(["+10000000000", "+10000000000", "+10000000000"])
 CLOSE_NUMBERS = set(
     [
-        "",
+        "+10000000000",
+        "+10000000000",
     ]
 )
 
 caller_number_to_user_email = {}
 
 automated_message_starts = [
-    "",
-    "",
-    "",
+    "Hello, this is X.",
+    "Thanks for calling X.",
+    "Thank you for calling X.",
 ]
 
 message_phrase_to_agent_email = {
-    "SS": SS,
-    "DP": DP,
-    "CM1": CM,
-    "CM2": CM,
+    "this is A from X": SS,
+    "this is B from X": DP,
+    "We last spoke in C": CM,
+    "Hablamos por última vez C": CM,
 }
 
 call_status_disposition_map = {
