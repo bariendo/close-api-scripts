@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 from typing import Any, List, cast
 
 from CloseApiWrapper import CloseApiWrapper
@@ -258,12 +259,16 @@ for lead in unassigned_leads:
 
 if updated_leads:
     print(f"Updated {len(updated_leads)} out of {len(unassigned_leads)} leads.")
-    with open(f"output/leads_updated_with_pn-{env}.json", "w") as f:
+    fp = Path(f"output/leads_updated_with_pn-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(updated_leads, f)
 else:
     print("No leads were updated.")
 
 if unchanged_leads:
     print(f"{len(unchanged_leads)} leads could not be updated.")
-    with open(f"output/leads_unchanged_with_pn-{env}.json", "w") as f:
+    fp = Path(f"output/leads_unchanged_with_pn-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(unchanged_leads, f)

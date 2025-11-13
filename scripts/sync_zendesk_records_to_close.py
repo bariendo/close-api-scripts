@@ -2,6 +2,7 @@ import argparse
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from closeio_api import APIError
@@ -357,7 +358,9 @@ def sync_data(zendesk_resource_type, close_object_type):
         print(f"No new {zendesk_resource_type} since {last_lead_creation_date}")
         return
 
-    with open(f"output/zendesk_{zendesk_resource_type}-{env}.json", "w") as f:
+    fp = Path(f"output/zendesk_{zendesk_resource_type}-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(zendesk_data, f)
 
     function_mapping = {
@@ -410,18 +413,18 @@ def sync_data(zendesk_resource_type, close_object_type):
     )
 
     print(f"Created {len(created_objects)} Close {close_object_type}s")
-    with open(
-        f"output/{obj_type}s_synced_from_zendesk_{zendesk_resource_type}-{env}.json",
-        "w",
-    ) as f:
+    fp = Path(f"output/{obj_type}s_zendesk_synced_{zendesk_resource_type}-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(created_objects, f)
 
     if failed_objects:
         print(f"{len(failed_objects)} Close {close_object_type}s")
-        with open(
-            f"output/{obj_type}s_not_synced_from_zendesk_{zendesk_resource_type}-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(
+            f"output/{obj_type}s_zendesk_sync_errors_{zendesk_resource_type}-{env}.json"
+        )
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(failed_objects, f)
 
 

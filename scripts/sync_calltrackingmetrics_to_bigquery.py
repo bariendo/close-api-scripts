@@ -1,14 +1,15 @@
 import argparse
 import asyncio
-from datetime import datetime, timedelta, timezone
 import json
 import logging
 import os
 import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
 from BigQueryClientWrapper import BigQueryClientWrapper
 from CallTrackingMetricsAPIClient import CallTrackingMetricsAPIClient
 from utils.get_api_key import get_api_key
-
 
 arg_parser = argparse.ArgumentParser(
     description="Sync CallTrackingMetrics records to BigQuery"
@@ -65,8 +66,9 @@ async def get_ctm_activities(start_date: str | None = None):
         if calls:
             if args.verbose:
                 logging.info(f"Fetched {len(calls)} calls")
-            file_path = f"output/calltrackingmetrics-calls-{env}.json"
-            with open(file_path, "w") as f:
+            fp = Path(f"output/calltrackingmetrics-calls-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(calls, f)
             # return file_path
             return calls

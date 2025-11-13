@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 import logging
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -65,10 +66,9 @@ async def main():
         logging.info(
             f"{len(custom_activity_instances)} {args.custom_activity_type} instances"
         )
-        with open(
-            f"output/custom_activity_instances-{args.custom_activity_type}-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/custom_activity-{args.custom_activity_type}-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(custom_activity_instances, f)
     else:
         logging.info(f"No {args.custom_activity_type} instances were found.")

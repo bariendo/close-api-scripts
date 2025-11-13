@@ -7,6 +7,7 @@ import os
 import sys
 from collections import defaultdict, namedtuple
 from datetime import datetime
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -275,7 +276,9 @@ def print_failure_reasons_and_save_details_to_csv(failure_counts, csv_file_path)
         print(f"Failure Reason: {reason} (Total Count: {total_counts[reason]})")
 
     # Save details and counts to a CSV file
-    with open(csv_file_path, mode="w", newline="") as file:
+    fp = Path(csv_file_path)
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open(mode="w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["reason", "detail", "count"])  # Write header
 
@@ -330,20 +333,18 @@ async def main():
         )
         if created_activites:
             logging.info(f"Synced {len(created_activites)} activities.")
-            with open(
-                f"output/activites_created_from_calltrackingmetrics-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/activites_created_from_calltrackingmetrics-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(created_activites, f)
 
         if failed_activities:
             logging.info(
                 f"{len(failed_activities)} CallTrackingMetrics activities could not be posted."
             )
-            with open(
-                f"output/unsynced_ctm_activities-failed-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/unsynced_ctm_activities-failed-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(failed_activities, f)
     else:
         logging.info("No activites were created.")
@@ -352,10 +353,9 @@ async def main():
         logging.info(
             f"{len(unsynced_ctm_activities)} CallTrackingMetrics activities not synced."
         )
-        with open(
-            f"output/unsynced_ctm_activities-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/unsynced_ctm_activities-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(unsynced_ctm_activities, f)
     else:
         logging.info("All CallTrackingMetrics activites were synced to Close.")

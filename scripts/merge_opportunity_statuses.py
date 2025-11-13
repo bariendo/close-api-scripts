@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -86,7 +87,9 @@ for idx, opp in enumerate(opportunities):
 
 if updated_opps:
     print(f"Updated {len(updated_opps)} out of {len(opportunities)} opportunities.")
-    with open(f"output/opportunities_status_merged-{env}.json", "w") as f:
+    fp = Path(f"output/opportunities_status_merged-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(updated_opps, f)
 else:
     print("No opportunities were updated.")

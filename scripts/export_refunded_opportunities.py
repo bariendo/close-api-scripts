@@ -2,6 +2,7 @@ import argparse
 import csv
 import os
 from datetime import date, datetime
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -124,8 +125,6 @@ def to_csv(
     output_path: str,
     verbose: bool = False,
 ) -> None:
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
     # CSV columns
     headers = [
         "lead_id",
@@ -152,7 +151,9 @@ def to_csv(
         LOSS_REASON_DETAILS_CUSTOM_FIELD_NAME
     ]
 
-    with open(output_path, "w", newline="") as f:
+    fp = Path(output_path)
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
 

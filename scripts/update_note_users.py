@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from closeio_api import APIError
@@ -96,14 +97,18 @@ async def main():
     updated_notes, errored_notes = await update_notes(notes)
     if updated_notes:
         print(f"Updated {len(updated_notes)} out of {len(notes)} notes.")
-        with open(f"output/notes_updated-{env}.json", "w") as f:
+        fp = Path(f"output/notes_updated-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(updated_notes, f)
     else:
         print("No leads were updated.")
 
     if errored_notes:
         print(f"{len(errored_notes)} leads could not be updated.")
-        with open(f"output/notes_unchanged-{env}.json", "w") as f:
+        fp = Path(f"output/notes_unchanged-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(errored_notes, f)
 
 

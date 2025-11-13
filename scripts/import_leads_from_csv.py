@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.csv import read_csv
@@ -111,10 +112,9 @@ for lead in leads:
 
 if created_leads:
     print(f"Created {len(created_leads)} Leads")
-    with open(
-        f"output/leads_imported_from_csv-{env}.json",
-        "w",
-    ) as f:
+    fp = Path(f"output/leads_imported_from_csv-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(created_leads, f)
 else:
     print("No Leads were created.")

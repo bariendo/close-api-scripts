@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -138,10 +139,9 @@ async def main():
         print("No active subscriptions found.")
         return
 
-    with open(
-        f"output/workflow_subscriptions_unenrolled-{env}.json",
-        "w",
-    ) as f:
+    fp = Path(f"output/workflow_subscriptions_unenrolled-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(subscriptions, f)
 
     delete_endpoints = [f"sequence_subscription/{sub['id']}" for sub in subscriptions]
@@ -163,18 +163,16 @@ async def main():
     )
     if post_subscriptions:
         print(f"Recreated {len(post_subscriptions)} subscriptions.")
-        with open(
-            f"output/workflow_subscriptions_recreated-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/workflow_subscriptions_recreated-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(post_subscriptions, f)
 
     if errors:
         print(f"{len(errors)} subscriptions could not be recreated.")
-        with open(
-            f"output/workflow_subscriptions_recreation_failed-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/workflow_subscriptions_recreation_failed-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(errors, f)
 
 

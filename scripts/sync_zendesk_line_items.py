@@ -3,6 +3,7 @@ import asyncio
 import json
 import logging
 import sys
+from pathlib import Path
 
 from basecrm.errors import RateLimitError
 from CloseApiWrapper import CloseApiWrapper
@@ -138,10 +139,9 @@ async def main():
 
     if updated_opps:
         logging.info(f"Updated {len(updated_opps)} opportunities.")
-        with open(
-            f"output/opportunities_updated_with_services-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/opportunities_updated_with_services-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(updated_opps, f)
     else:
         logging.info("No opportunities were updated.")

@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import csv
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 import requests
 from utils.get_api_key import get_api_key
@@ -173,7 +174,9 @@ async def main():
         "unexpected_location_resource",
     ]
 
-    with open("output/appointment_issues.csv", "w", newline="") as csvfile:
+    fp = Path("output/appointment_issues.csv")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 

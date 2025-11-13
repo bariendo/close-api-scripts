@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -87,6 +88,8 @@ for opportunity in opportunities:
 print(f"Updated {len(updated_opportunities)} opportunities")
 
 if updated_opportunities:
-    with open(f"output/updated_opportunities_{args.custom_field}-{env}.json", "w") as f:
+    fp = Path(f"output/updated_opportunities_{args.custom_field}-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(updated_opportunities, f)
     print("Updated opportunities saved to disk")

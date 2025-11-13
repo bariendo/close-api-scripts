@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 from datetime import datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from CloseApiWrapper import CloseApiWrapper
@@ -226,28 +227,25 @@ async def main():
         )
         if updated_instances:
             print(f"Updated {len(updated_instances)} Custom Activity instances.")
-            with open(
-                f"output/custom_activity_instances_updated_with_opportunity_ids-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/custom_activity_instances_linked_to_opps-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(updated_instances, f)
 
         if failed_updates:
             print(f"{len(failed_updates)} update attempts failed.")
-            with open(
-                f"output/custom_activity_instances_updated_with_opportunity_ids-errors-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/custom_activity_instances_linking_errors-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(failed_updates, f)
     else:
         print("No Custom Activity instances were matched with opportunities")
 
     if unmatched_leads:
         print(f"{len(unmatched_leads)} leads were not updated.")
-        with open(
-            f"output/custom_activity_instances_not_updated-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/custom_activity_instances_linking_not_updated-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(unmatched_leads, f)
 
 

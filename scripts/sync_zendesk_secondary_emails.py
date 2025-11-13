@@ -4,6 +4,7 @@ import json
 import logging
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -122,10 +123,9 @@ async def main():
 
         if updated_contacts:
             logging.info(f"Updated {len(updated_contacts)} contacts.")
-            with open(
-                f"output/contacts_updated_with_secondary_email-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/contacts_updated_with_secondary_email-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(updated_contacts, f)
         else:
             logging.info("No contacts were updated.")

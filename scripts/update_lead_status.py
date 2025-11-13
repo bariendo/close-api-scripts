@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -88,16 +89,18 @@ for idx, opp in enumerate(opportunities):
 
 if updated_leads:
     print(f"Updated {len(updated_leads)} out of {len(opportunities)} leads.")
-    with open(
-        f"output/leads_status_updated_from_loss_reason-{env}.json", "w"
-    ) as f:
+    fp = Path(f"output/leads_status_updated_from_loss_reason-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(updated_leads, f)
 else:
     print("No leads were updated.")
 
 if updated_opps:
     print(f"Updated {len(updated_opps)} out of {len(opportunities)} opportunities.")
-    with open(f"output/opportunities_loss_reason_removed-{env}.json", "w") as f:
+    fp = Path(f"output/opportunities_loss_reason_removed-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(updated_opps, f)
 else:
     print("No opportunities were updated.")

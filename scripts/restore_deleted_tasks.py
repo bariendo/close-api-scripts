@@ -1,5 +1,6 @@
 import argparse
 import json
+from pathlib import Path
 import sys
 
 import gevent.monkey
@@ -90,5 +91,7 @@ print(f"Total tasks restored {len(total_tasks_restored)}")
 print(f"Total tasks not restored {(len(task_ids) - len(total_tasks_restored))}")
 
 # Save restored tasks to JSON file
-with open("output/restored_tasks.json", "w") as file:
+file_path = Path("output/restored_tasks.json")
+file_path.parent.mkdir(parents=True, exist_ok=True)
+with file_path.open("w") as file:
     json.dump(total_tasks_restored, file)

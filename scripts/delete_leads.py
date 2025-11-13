@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -71,7 +72,9 @@ elif args.last_minutes:
         },
         fields=["id", "name"],
     )
-    with open(f"output/deleted_leads-{env}.json", "w") as f:
+    fp = Path(f"output/deleted_leads-{env}.json")
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w") as f:
         json.dump(queried_leads, f)
     lead_ids = [lead["id"] for lead in queried_leads]
 else:

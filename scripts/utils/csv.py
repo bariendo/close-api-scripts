@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 
@@ -19,7 +20,9 @@ def read_csv_to_dict(file_path: str) -> list[dict[str, Any]]:
 
 
 def write_csv(file_name: str, keys: list[str], rows: Iterable[Mapping[str, Any]]):
-    with open(file_name, "w", newline="", encoding="utf-8") as f:
+    fp = Path(file_name)
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    with fp.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, keys)
         writer.writeheader()
         writer.writerows(rows)

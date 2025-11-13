@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 import logging
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.formatters import format_phone_number, get_full_name
@@ -148,10 +149,9 @@ async def main():
 
     if update_payloads:
         logging.info(f"Updating {len(update_payloads)} contacts...")
-        with open(
-            f"output/contact_updates_from_zendesk_leads-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/contact_updates_from_zendesk_leads-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(update_payloads, f)
 
         updated_contacts, failed_updates = await close.put_all(
@@ -159,18 +159,16 @@ async def main():
         )
         if updated_contacts:
             logging.info(f"Updated {len(updated_contacts)} contacts.")
-            with open(
-                f"output/contacts_updated_from_zendesk_leads-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/contacts_updated_from_zendesk_leads-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(updated_contacts, f)
 
         if failed_updates:
             logging.info(f"{len(failed_updates)} updates could not be made.")
-            with open(
-                f"output/contact_updates_from_zendesk_leads-failed-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/contact_updates_from_zendesk_leads-failed-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(failed_updates, f)
     else:
         logging.info("No contacts were updated.")

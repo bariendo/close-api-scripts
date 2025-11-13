@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 from dataclasses import dataclass
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.get_api_key import get_api_key
@@ -101,20 +102,22 @@ async def main(update_info: CustomFieldUpdate) -> None:
     # Print results
     if successful:
         print(f"\nSuccessfully updated {len(successful)} {update_info.object_type}s")
-        with open(
-            f"output/{update_info.object_type}s_updated_with_{update_info.field_name}-{update_info.env}.json",
-            "w",
-        ) as f:
+        fp = Path(
+            f"output/{update_info.object_type}s_{update_info.field_name}_updated-{update_info.env}.json"
+        )
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(successful, f)
     else:
         print(f"No {update_info.object_type}s were updated")
 
     if failed:
         print(f"Failed to update {len(failed)} {update_info.object_type}s:")
-        with open(
-            f"output/{update_info.object_type}s_unchanged_with_{update_info.field_name}-{update_info.env}.json",
-            "w",
-        ) as f:
+        fp = Path(
+            f"output/{update_info.object_type}s_{update_info.field_name}_update_failed-{update_info.env}.json"
+        )
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(failed, f)
 
 

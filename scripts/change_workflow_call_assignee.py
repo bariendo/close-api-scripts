@@ -3,6 +3,7 @@ import asyncio
 import json
 import logging
 import sys
+from pathlib import Path
 
 from CloseApiWrapper import CloseApiWrapper
 from utils.formatters import get_full_name
@@ -159,20 +160,18 @@ async def main():
         )
 
     if delete_endpoints:
-        with open(
-            f"output/workflow_subscriptions_deleted-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/workflow_subscriptions_deleted-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(delete_endpoints, f)
 
         results = await api.delete_all(delete_endpoints)
         print(results)
 
     if reassign_payloads:
-        with open(
-            f"output/workflow_subscriptions_payload-{env}.json",
-            "w",
-        ) as f:
+        fp = Path(f"output/workflow_subscriptions_payload-{env}.json")
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        with fp.open("w") as f:
             json.dump(reassign_payloads, f)
 
         created_subscriptions, failed_creations = await api.post_all(
@@ -180,18 +179,16 @@ async def main():
         )
         if created_subscriptions:
             logging.info(f"Reassigned {len(created_subscriptions)} subscriptions.")
-            with open(
-                f"output/workflow_subscriptions_created-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/workflow_subscriptions_created-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(created_subscriptions, f)
 
         if failed_creations:
             logging.info(f"{len(failed_creations)} subscriptions could not be created.")
-            with open(
-                f"output/workflow_subscriptions-failed-{env}.json",
-                "w",
-            ) as f:
+            fp = Path(f"output/workflow_subscriptions-failed-{env}.json")
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            with fp.open("w") as f:
                 json.dump(failed_creations, f)
 
 
